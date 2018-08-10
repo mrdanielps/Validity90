@@ -79,6 +79,7 @@ DeviceInfo all_devices[] = {
     { .vid = 0x138a, .pid = 0x0090, .hasLed = 1, .hasBios = 1, .requiresReset = 0, .hasRawOutput = 1 },
     { .vid = 0x138a, .pid = 0x0097, .hasLed = 1, .hasBios = 1, .requiresReset = 0, .hasRawOutput = 0 },
     { .vid = 0x138a, .pid = 0x0094, .hasLed = 0, .hasBios = 0, .requiresReset = 1, .hasRawOutput = 1, .unsupported = 1, .description = "Support would be available soon" },
+    { .vid = 0x138a, .pid = 0x009d, .hasLed = 1, .hasBios = 1, .requiresReset = 0, .hasRawOutput = 0 },
     { .vid = 0x06cb, .pid = 0x0081, .hasLed = -1, .hasBios = -1, .requiresReset = 1, .hasRawOutput = -1, .unsupported = 1, .description = "Support would be available soon" },
     { .vid = 0x06cb, .pid = 0x009a, .hasLed = 1, .hasBios = -1, .requiresReset = 0, .hasRawOutput = -1 },
     { .vid = 0x138a, .pid = 0x0091, .unsupported = 1, .description = "Won't be supported, check README" },
@@ -1024,16 +1025,13 @@ void fingerprint() {
     memcpy(image + image_len, response + 0x06, response_len - 0x06);
     image_len += response_len - 0x06;
 
-
-
-
-    //char packet4[] = { 0x4b, 0x00, 0x00, 0x0b, 0x00, 0x53, 0x74, 0x67, 0x57, 0x69, 0x6e, 0x64, 0x73, 0x6f, 0x72, 0x00 };
-    //tls_write(packet4, sizeof(packet4));
-    //tls_read(response, &response_len);puts("READ:");print_hex(response, response_len);
-
     // Check against db packet
     char packet1[] = { 0x5e, 0x02, 0xff, 0x03, 0x00, 0x05, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00 };
     tls_write(packet1, sizeof(packet1));
+    tls_read(response, &response_len);puts("READ:");print_hex(response, response_len);
+
+    char packet4[] = { 0x4b, 0x00, 0x00, 0x0b, 0x00, 0x53, 0x74, 0x67, 0x57, 0x69, 0x6e, 0x64, 0x73, 0x6f, 0x72, 0x00 };
+    tls_write(packet4, sizeof(packet4));
     tls_read(response, &response_len);puts("READ:");print_hex(response, response_len);
 
     int validated_finger_id = -1;
